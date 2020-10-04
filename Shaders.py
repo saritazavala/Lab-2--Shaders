@@ -6,7 +6,6 @@
 # ------------------------------------------------------------
 
 import struct
-import math
 from Obj import Obj
 from collections import namedtuple
 
@@ -324,141 +323,11 @@ class Render(object):
                 y += 1 if y1 < y2 else -1
                 threshold += 2 * dx
 
-    def shader(self, x, y, z):
-        # Colores a utilizar
-        c1 = [20, 36, 169]
-        c2 = [62, 84, 232]
-        c3 = [62, 102, 249]
-        c4 = [96, 129, 255]
-        c5 = [137, 243, 255]
-
-        # Gradiente de la derecha y parte superior
-        if x > 305 and y > 280:
-            dx = x - 335
-            dy = y - 280
-            dst = math.sqrt(dx ** 2 + dy ** 2)
-
-            if dst >= 190:
-                r = (250 - dst) / 60
-                return color(int(c2[0] * r), int(c2[1] * r), int(c2[2] * r))
-            else:
-                if y > 170:
-                    dx = 335 - x
-                    dy = y - 170
-                    dst = math.sqrt(dx ** 2 + dy ** 2)
-                    if dst >= 230:
-                        r = (250 - dst) / 20
-                        r1 = int(c2[1] + 18 * r)
-                        r2 = int(c2[2] + 17 * r)
-                        return color(c3[0], r1, r2)
-                    else:
-                        # Remolino en el centro
-                        if y > 320:
-                            dx = 400 - x
-                            dy = y - 50
-                            dst = math.sqrt(dx ** 2 + dy ** 2)
-                            if dst <= 285:
-                                return color(c1[0], c1[1], c1[2])
-                            elif dst <= 295:
-                                return color(c2[0], c2[1], c2[2])
-                            elif dst <= 297 and x < 400 and x > 370:
-                                return color(c5[0], c5[1], c5[2])
-                            else:
-                                return color(c3[0], c3[1], c3[2])
-                        else:
-                            dx = 400 - x
-                            dy = y - 550
-                            dst = math.sqrt(dx ** 2 + dy ** 2)
-                            if dst <= 245:
-                                return color(c1[0], c1[1], c1[2])
-                            elif dst <= 248:
-                                if x < 380 and x > 350:
-                                    return color(c5[0], c5[1], c5[2])
-                                else:
-                                    return color(c2[0], c2[1], c2[2])
-                            elif dst <= 260:
-                                return color(c2[0], c2[1], c2[2])
-                            elif dst <= 265:
-                                if x < 400 and x > 330:
-                                    return color(c5[0], c5[1], c5[2])
-                                else:
-                                    return color(c2[0], c2[1], c2[2])
-                            else:
-                                return color(c3[0], c3[1], c3[2])
-                else:
-                    return color(c3[0], c3[1], c3[2])
-
-        else:
-            # Gradiente de la parte izquierda
-            if x > 270 and x < 295 and y > 230 and y < 260:
-                dx = x - 270
-                if y > 230:
-                    dy = y - 230
-                else:
-                    dy = 260 - y
-                dst = dx + dy
-                if dst < 20:
-                    # Triangulo de la izquierda inferior
-                    return color(c4[0], c4[1], c4[2])
-                else:
-                    return color(c3[0], c3[1], c3[2])
-            else:
-                if y > 300:
-                    dx = 335 - x
-                    dy = y - 300
-                    dst = math.sqrt(dx ** 2 + dy ** 2)
-                    if dst > 100:
-
-                        r = (120 - dst) / 20
-                        r1 = int(c2[1] + 18 * r)
-                        r2 = int(c2[2] + 17 * r)
-                        return color(c3[0], r1, r2)
-                    else:
-                        return color(c3[0], c3[1], c3[2])
-                else:
-                    if y > 100:
-                        dx = x - 400
-                        dy = y
-                        dst = math.sqrt(dx ** 2 + dy ** 2)
-
-                        # Circulos de la parte inferior con gradiente
-                        if dst >= 240:
-                            if x > 503:
-                                dx = x - 335
-                                dy = y - 280
-                                dst = math.sqrt(dx ** 2 + dy ** 2)
-
-                                if dst >= 190:
-                                    r = (250 - dst) / 60
-                                    return color(int(c2[0] * r), int(c2[1] * r), int(c2[2] * r))
-                                else:
-                                    return color(c3[0], c3[1], c3[2])
-                            else:
-                                if dst <= 155:
-                                    r = (155 - dst) / 5
-                                    r1 = int(c3[1] - 18 * r)
-                                    r2 = int(c3[2] - 17 * r)
-                                    return color(c3[0], r1, r2)
-                                else:
-                                    return color(c3[0], c3[1], c3[2])
-                        elif dst >= 180:
-                            r = (250 - dst) / 70
-                            r1 = int(c2[1] + 18 * r)
-                            r2 = int(c2[2] + 17 * r)
-                            return color(c3[0], r1, r2)
-
-                        else:
-                            r = (dst) / 180
-                            return color(int(c3[0] * r), int(c3[1] * r), int(c3[2] * r))
-
-                    else:
-                        return color(c3[0], c3[1], c3[2])
-
 
 r = Render('Lab2.bmp')
 r.glCreateWindow(800, 600)
 r.glClear()
-r.load_model('./sphere.obj', translate=[1.13, 0.84, 1], scale=[350, 350, 350])
+r.load_model('./sphere.obj', (400, 300, 0), (350,350,350))
 r.glFinish()
 
 
