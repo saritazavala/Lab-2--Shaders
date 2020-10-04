@@ -223,7 +223,7 @@ class Render(object):
                 # Shading
                 xp = min([x1, x2, x3])
                 yp = min([y1, y2, y3])
-                colorShader = self.shader(xp, yp)
+                colorShader = self.mars_shader(xp, yp)
 
                 normal = norm(cross(sub(B, A), sub(C, A)))
                 intensity = dot(normal, norm(light))
@@ -275,7 +275,7 @@ class Render(object):
                 # Shading
                 xp = min([x1, x2, x3, x4])
                 yp = min([y1, y2, y3, y4])
-                colorShader = self.shader(xp, yp)
+                colorShader = self.mars_shader(xp, yp)
 
                 normal = norm(cross(sub(B, A), sub(C, A)))
                 intensity = dot(normal, norm(light))
@@ -343,29 +343,24 @@ class Render(object):
                 y += 1 if y1 < y2 else -1
                 threshold += 2 * dx
 
-    def shader(self, x, y):
-        if (y >= 275 and y <= 279 and x >= 435 and x % 2 == 0):
-            return color2(57, 79, 198)  # empiza parte de abajo
-        elif (y >= 280 and y <= 285 and x >= 430 and x % 2 == 0):
-            return color2(57, 79, 198)
-        elif (y >= 286 and y <= 290 and x >= 425 and x % 2 == 0):
-            return color2(57, 79, 198)
-        elif (y >= 291 and y <= 295 and x >= 420 and x % 2 == 0):
-            return color2(57, 79, 198)
-        elif (y >= 296 and y <= 300 and x >= 415 and x % 2 == 0):
-            return color2(57, 79, 198)
-        elif (y >= 304 and y <= 306 and x >= 427 and x % 2 == 0):
-            return color2(250, 250, 250)  # en medio
-        elif (y >= 307 and y <= 325 and x <= 250):
-            return color2(69, 111, 254)  # empieza parte de arriba
-        elif (y >= 420 and y <= 460):
-            return color2(57, 79, 198)
-        elif (y >= 400 and y <= 320 and x >= 200):
-            return color2(250, 250, 250)
-        else:
-            return color2(69, 111, 254)
+    def mars_shader(self, x, y):
+        if (x > 350 and y > 325):
+            return color2(200, 69, 40)
 
-r = Render('Lab2.bmp')
+        elif (y>320):
+            return color2(149,35,10)
+
+        elif (x > 230 and x < 295 and y > 200):
+            return color2(226,103,0)
+
+        elif (y<150 and x>200):
+            return color2(197,2,2)
+
+        else:
+            return color2(223,61,11)
+
+
+r = Render('marte.bmp')
 r.glCreateWindow(800, 600)
 r.glClear()
 r.load_model('./sphere.obj', (400, 300, 0), (350,350,350))
