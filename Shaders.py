@@ -220,16 +220,25 @@ class Render(object):
                 B = V3(x2, y2, z2)
                 C = V3(x3, y3, z3)
 
+                # Shading
+                xp = min([x1, x2, x3])
+                yp = min([y1, y2, y3])
+                colorShader = self.shader(xp, yp)
+
                 normal = norm(cross(sub(B, A), sub(C, A)))
-                intensity = dot(normal, light)
-                grey = round(255 * intensity)
+                intensity = dot(normal, norm(light))
+                colors = []
+                for i in colorShader:
+                    if i * intensity > 0:
+                        colors.append(round(i * intensity))
+                    else:
+                        colors.append(10)
+                colors.reverse()
 
-                if grey < 0:
-                    continue
-
-                self.change_color = color2(grey, grey, grey)
-
+                self.change_color = color2(colors[0], colors[1], colors[2])
                 self.triangle(A, B, C)
+
+
 
             else:
                 f1 = face[0][0] - 1
@@ -263,17 +272,27 @@ class Render(object):
                 C = V3(x3, y3, z3)
                 D = V3(x4, y4, z4)
 
-                normal = norm(cross(sub(B, A), sub(C, A)))
-                intensity = dot(normal, light)
-                grey = round(255 * intensity)
-                if grey < 0:
-                    continue
+                # Shading
+                xp = min([x1, x2, x3, x4])
+                yp = min([y1, y2, y3, y4])
+                colorShader = self.shader(xp, yp)
 
-                self.change_color = color2(grey, grey, grey)
+                normal = norm(cross(sub(B, A), sub(C, A)))
+                intensity = dot(normal, norm(light))
+                colors = []
+                for i in colorShader:
+                    if i * intensity > 0:
+                        colors.append(round(i * intensity))
+                    else:
+                        colors.append(10)
+                self.change_color = color(colors[0], colors[1], colors[2])
+                colors.reverse()
 
                 self.triangle(A, B, C)
+                self.triangle(A, C, D)
 
-                self.triangle(A, D, C)
+
+
 
     #Takes a new color  
     def glClearColor(self, red,blue,green):
@@ -290,7 +309,8 @@ class Render(object):
         x_temp  = round((x + 1) * (self.ViewPort_width/ 2) + self.x_position)
         y_temp  = round((y + 1) * (self.ViewPort_height/2) + self.y_position)
         self.glpoint(round(x_temp ), round(y_temp ))
-        #Codigo basado en codigo visto en clase
+
+    #Codigo basado en codigo visto en clase
     #Dennis Aldana 2020
     def glLine(self, x1, y1, x2, y2):
 
@@ -323,6 +343,27 @@ class Render(object):
                 y += 1 if y1 < y2 else -1
                 threshold += 2 * dx
 
+    def shader(self, x, y):
+        if (y >= 275 and y <= 279 and x >= 435 and x % 2 == 0):
+            return color2(57, 79, 198)  # empiza parte de abajo
+        elif (y >= 280 and y <= 285 and x >= 430 and x % 2 == 0):
+            return color2(57, 79, 198)
+        elif (y >= 286 and y <= 290 and x >= 425 and x % 2 == 0):
+            return color2(57, 79, 198)
+        elif (y >= 291 and y <= 295 and x >= 420 and x % 2 == 0):
+            return color2(57, 79, 198)
+        elif (y >= 296 and y <= 300 and x >= 415 and x % 2 == 0):
+            return color2(57, 79, 198)
+        elif (y >= 304 and y <= 306 and x >= 427 and x % 2 == 0):
+            return color2(250, 250, 250)  # en medio
+        elif (y >= 307 and y <= 325 and x <= 250):
+            return color2(69, 111, 254)  # empieza parte de arriba
+        elif (y >= 420 and y <= 460):
+            return color2(57, 79, 198)
+        elif (y >= 400 and y <= 320 and x >= 200):
+            return color2(250, 250, 250)
+        else:
+            return color2(69, 111, 254)
 
 r = Render('Lab2.bmp')
 r.glCreateWindow(800, 600)
